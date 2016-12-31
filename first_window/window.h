@@ -13,9 +13,12 @@ bool init_gl();
 
 bool render();
 
+void set_vsync(bool state);
+
 bool game_loop();
 
 void terminate_glfw();
 
 bool initialize_game();
 
+bool update_viewport();

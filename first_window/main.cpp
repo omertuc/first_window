@@ -1,6 +1,10 @@
 #include "window.h"
 #include "render.h"
 
+#include <time.h>
+
+#include <chrono>
+
 bool game_loop()
 {
 	GLFWwindow* current_window = glfwGetCurrentContext();
@@ -10,6 +14,9 @@ bool game_loop()
 		return false;
 	}
 
+	uint64_t loop_count = 0;
+	
+	auto start = std::chrono::high_resolution_clock::now();
 	while(!glfwWindowShouldClose(current_window))
 	{
 		glfwPollEvents();
@@ -20,7 +27,14 @@ bool game_loop()
 		}
 
 		glfwSwapBuffers(current_window);
+
+		loop_count++;
 	}
+	auto end = std::chrono::high_resolution_clock::now();
+
+	std::chrono::duration<double> diff = end - start;
+
+	std::cout << "The game took " << diff.count() << " seconds with " << loop_count << " frames." << std::endl;
 
 	return true;
 }

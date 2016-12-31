@@ -18,6 +18,24 @@ GLFWmonitor* get_primary_monitor()
 	return monitors[0];
 }
 
+void my_focus_callback(GLFWwindow* window, int focus_state)
+{
+	// We gained focus...
+	if (focus_state)
+	{
+		print_info("Gained focus");
+
+		glfwMakeContextCurrent(window);
+	}
+
+	return;
+}
+
+void set_vsync(bool state)
+{
+	glfwSwapInterval(state ? 1 : 0);
+}
+
 bool init_glfw()
 {
 	if (glfwInit() != GLFW_TRUE)
@@ -61,8 +79,11 @@ bool init_glfw()
 	}
 
 	glfwSetKeyCallback(window, my_key_callback);
+	glfwSetWindowFocusCallback(window, my_focus_callback);
 
 	glfwMakeContextCurrent(window);
+
+	set_vsync(true);
 
 	return true;
 }
@@ -80,6 +101,16 @@ bool init_glew()
 }
 
 bool init_gl()
+{
+	if (!update_viewport())
+	{
+		return false;
+	}
+
+	return true;
+}
+
+bool update_viewport()
 {
 	GLFWwindow* current_window = glfwGetCurrentContext();
 	if (current_window == nullptr)
