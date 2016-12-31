@@ -5,6 +5,11 @@
 
 double g_back_color = 0.0f;
 
+void set_wireframe(bool enabled)
+{
+	glPolygonMode(GL_FRONT_AND_BACK, enabled ? GL_LINE : GL_FILL);
+}
+
 bool render(GLuint program, GLuint vao)
 {
 	glClearColor(g_back_color, 1.0f - g_back_color, 0.5, 1.0f);
@@ -12,7 +17,7 @@ bool render(GLuint program, GLuint vao)
 
 	glUseProgram(program);
 	glBindVertexArray(vao);
-	glDrawArrays(GL_TRIANGLES, 0, 3);   
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);   
 	glBindVertexArray(0);
 
 	return true;
