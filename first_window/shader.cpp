@@ -1,9 +1,13 @@
 #include <stdio.h>
 #include "general.h"
 
+#define VERTEX_SHADER_SOURCE_FILE "shader.vert"
+#define FRAGMENT_SHADER_SOURCE_FILE "shader.frag"
+
 static char* read_entire_file(char* file_path)
 {
-	FILE* file_pointer = fopen(file_path, "rb");
+	FILE* file_pointer;
+	fopen_s(&file_pointer, file_path, "rb");
 	if (file_pointer == nullptr)
 	{
 		print_error("Failed to open file:");
@@ -15,7 +19,8 @@ static char* read_entire_file(char* file_path)
 	size_t file_size = ftell(file_pointer);
 	rewind(file_pointer);
 
-	char* file_buffer = new char[file_size];
+	// Allocate buffer for file.
+	char* file_buffer = new char[file_size + sizeof('\0')];
 	if (file_buffer == nullptr)
 	{
 		print_error("Failed to allocate buffer for file:");
@@ -36,13 +41,16 @@ static char* read_entire_file(char* file_path)
 	}
 
 	fclose(file_pointer);
+
+	// Put a NULL terminator at the end of the file.
+	file_buffer[file_size] = '\0';
 	return file_buffer;
 }
 
 char* get_vertex_shader()
 {
 	static char* shader =
-		read_entire_file("shaders\\shader.vert");
+		read_entire_file(VERTEX_SHADER_SOURCE_FILE);
 
 	return shader;
 }
@@ -50,7 +58,7 @@ char* get_vertex_shader()
 char* get_fragment_shader()
 {
 	static char* shader =
-		read_entire_file("shaders\\shader.frag");
+		read_entire_file(FRAGMENT_SHADER_SOURCE_FILE);
 
 	return shader;
 }

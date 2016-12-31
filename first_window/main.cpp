@@ -1,5 +1,6 @@
 #include "window.h"
 #include "render.h"
+#include "graphics.h"
 
 #include <time.h>
 
@@ -7,6 +8,22 @@
 
 bool game_loop()
 {
+	GLuint program = 0;
+	print_info("Initializing shaders...");
+	if (!initialize_shaders(program))
+	{
+		print_error("Failed to initialize shaders");
+		return false;
+	}
+
+	GLuint vao = 0;
+	print_info("Initializing vertices...");
+	if (!initialize_vertices(vao))
+	{
+		print_error("Failed to initialize vertices");
+		return false;
+	}
+
 	GLFWwindow* current_window = glfwGetCurrentContext();
 	if (current_window == nullptr)
 	{
@@ -21,7 +38,7 @@ bool game_loop()
 	{
 		glfwPollEvents();
 
-		if (!render())
+		if (!render(program, vao))
 		{
 			return false;
 		}
