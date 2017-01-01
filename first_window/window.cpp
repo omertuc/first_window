@@ -15,7 +15,7 @@ GLFWmonitor* get_primary_monitor()
 	}
 
 	// The primary monitor is always the first.
-	return monitors[1];
+	return monitors[0];
 }
 
 void my_focus_callback(GLFWwindow* window, int focus_state)
