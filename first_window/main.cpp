@@ -2,34 +2,17 @@
 #include "render.h"
 #include "graphics.h"
 #include "texture.h"
-
-#include <time.h>
+#include "Game.h"
 
 #include <chrono>
 
+
 bool game_loop()
 {
-	GLuint program = 0;
-	print_info("Initializing shaders...");
-	if (!initialize_shaders(program))
+	Game my_game;
+	if (!my_game.initialize())
 	{
-		print_error("Failed to initialize shaders");
-		return false;
-	}
-
-	GLuint vao = 0;
-	print_info("Initializing vertices...");
-	if (!initialize_vertices(vao))
-	{
-		print_error("Failed to initialize vertices");
-		return false;
-	}
-
-	GLuint texture = 0;
-	print_info("Initializing textures...");
-	if (!import_texture("wood.jpg", texture))
-	{
-		print_error("Failed to initialize vertices");
+		print_error("Failed to initialize the game.");	
 		return false;
 	}
 
@@ -47,7 +30,7 @@ bool game_loop()
 	{
 		glfwPollEvents();
 
-		if (!render(program, vao, texture))
+		if (!render(my_game))
 		{
 			return false;
 		}
@@ -69,7 +52,7 @@ int main()
 {
 	int ret_val = 0;
 
-	if (!initialize_game())
+	if (!initialize_libraries())
 	{
 		print_error("Failed to initialize game");
 		ret_val = -1;
@@ -90,4 +73,5 @@ done:
 	getchar();
 	return ret_val;
 }
+
 

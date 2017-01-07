@@ -18,15 +18,31 @@ void set_texture_filtering_linear(bool enabled)
 		enabled ? GL_LINEAR : GL_NEAREST);
 }
 
+#include <sstream>
+static void bind_textures(const std::vector<GLuint>& textures, GLuint program)
+{
+	for (auto it = textures.begin(); it != textures.end(); ++it) 
+	{
+		int index = std::distance(textures.begin(), it);
 
-bool render(GLuint program, GLuint vao, GLuint texture)
+		std::stringstream sstm;
+		sstm << "ourTexture" << index;
+		std::string text_var_name = sstm.str();
+
+		glActiveTexture(GL_TEXTURE0 + index);
+		glBindTexture(GL_TEXTURE_2D, *it);
+		glUniform1i(glGetUniformLocation(program, text_var_name.c_str()), index);
+	}
+}
+
+bool render(const Game& game)
 {
 	glClearColor(g_back_color, 1.0f - g_back_color, 0.5, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	glUseProgram(program);
-	glBindVertexArray(vao);
-	glBindTexture(GL_TEXTURE_2D, texture);
+	glUseProgram(game.get_program());
+	glBindVertexArray(game.get_vao());
+	bind_textures(game.get_textures(), game.get_program());
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);   
 	glBindVertexArray(0);
 

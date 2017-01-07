@@ -3,4 +3,5 @@
 #include "opengl.h"
 #include "general.h"
 
-bool import_texture(const std::string& file_path, GLuint& texture_id);
+bool import_textures(const std::vector<const std::string>& files, 
+					 std::vector<GLuint>& o_textures);

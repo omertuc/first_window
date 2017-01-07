@@ -17,6 +17,6 @@ bool game_loop();
 
 void terminate_glfw();
 
-bool initialize_game();
+bool initialize_libraries();
 
 bool update_viewport();

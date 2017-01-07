@@ -18,7 +18,7 @@ void my_key_callback(GLFWwindow* window, int key, int scancode, int action, int 
 		}
 		else if (key == GLFW_KEY_V)
 		{
-			static bool is_enabled = false;
+			static bool is_enabled = true;
 			is_enabled = !is_enabled;
 			set_vsync(is_enabled);
 

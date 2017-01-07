@@ -36,6 +36,36 @@ void set_vsync(bool state)
 	glfwSwapInterval(state ? 1 : 0);
 }
 
+static GLFWwindow* get_window(int width, int height)
+{
+	return glfwCreateWindow(width, height, "FirstWindow", nullptr, nullptr);
+}
+
+static GLFWwindow* get_fullscreen_window()
+{
+	GLFWmonitor* monitor = get_primary_monitor();
+
+	if (monitor == nullptr)
+	{
+		print_error("Failed to get primary monitor");
+		return nullptr;
+	}
+
+	const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+	
+	if (mode == nullptr)
+	{
+		print_error("Failed to get video mode");
+		return nullptr;
+	}
+
+	int window_width = mode->width;
+	int window_height = mode->height;
+
+	return glfwCreateWindow(window_width, window_height,
+			"FirstWindow", monitor, nullptr);
+}
+
 bool init_glfw()
 {
 	if (glfwInit() != GLFW_TRUE)
@@ -46,30 +76,13 @@ bool init_glfw()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+    glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
 
-	GLFWmonitor* monitor = get_primary_monitor();
-	GLFWwindow* share = nullptr;
-
-	if (monitor == nullptr)
-	{
-		print_error("Failed to get primary monitor");
-		return false;
-	}
-
-	const GLFWvidmode* mode = glfwGetVideoMode(monitor);
-	
-	if (mode == nullptr)
-	{
-		print_error("Failed to get video mode");
-		return false;
-	}
-
-	int window_width = mode->width;
-	int window_height = mode->height;
-
-	GLFWwindow* window = glfwCreateWindow(window_width, window_height,
-			"FirstWindow", monitor, share);
+#ifdef FULLSCREEN
+	GLFWwindow* window = get_fullscreen_window();
+#else
+	GLFWwindow* window = get_window(800, 600);
+#endif
 
 	if (window == nullptr)
 	{
@@ -131,7 +144,7 @@ void terminate_glfw()
 	glfwTerminate();
 }
 
-bool initialize_game()
+bool initialize_libraries()
 {
 	print_info("Initializing GLFW...");
 	if (!init_glfw())

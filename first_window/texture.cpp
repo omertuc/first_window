@@ -1,6 +1,6 @@
 #include "texture.h"
 
-bool import_texture(const std::string& file_path, GLuint& o_texture_id)
+static bool import_texture(const std::string& file_path, GLuint& o_texture_id)
 {
 	// Load image from file.
 	int width, height;
@@ -28,6 +28,24 @@ bool import_texture(const std::string& file_path, GLuint& o_texture_id)
 	// Free image data, unbind texture.
 	SOIL_free_image_data(image);
 	glBindTexture(GL_TEXTURE_2D, 0);
+
+	return true;
+}
+
+bool import_textures(const std::vector<const std::string>& files, 
+					 std::vector<GLuint>& o_textures)
+{
+	for (auto it = files.begin(); it != files.end(); ++it)
+	{
+		GLuint texture;
+
+		if (!import_texture(*it, texture))
+		{
+			return false;
+		}
+
+		o_textures.push_back(texture);
+	}
 
 	return true;
 }
