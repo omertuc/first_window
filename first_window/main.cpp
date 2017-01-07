@@ -1,6 +1,7 @@
 #include "window.h"
 #include "render.h"
 #include "graphics.h"
+#include "texture.h"
 
 #include <time.h>
 
@@ -24,6 +25,14 @@ bool game_loop()
 		return false;
 	}
 
+	GLuint texture = 0;
+	print_info("Initializing textures...");
+	if (!import_texture("wood.jpg", texture))
+	{
+		print_error("Failed to initialize vertices");
+		return false;
+	}
+
 	GLFWwindow* current_window = glfwGetCurrentContext();
 	if (current_window == nullptr)
 	{
@@ -38,7 +47,7 @@ bool game_loop()
 	{
 		glfwPollEvents();
 
-		if (!render(program, vao))
+		if (!render(program, vao, texture))
 		{
 			return false;
 		}

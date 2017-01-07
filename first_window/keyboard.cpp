@@ -34,6 +34,15 @@ void my_key_callback(GLFWwindow* window, int key, int scancode, int action, int 
 			if (is_enabled) print_info("Wireframe has been enabled");
 			else			print_info("Wireframe has been disabled");
 		}
+		else if (key == GLFW_KEY_F)
+		{
+			static bool is_enabled = false;
+			is_enabled = !is_enabled;
+			set_texture_filtering_linear(is_enabled);
+
+			if (is_enabled) print_info("Linear texture filtering has been enabled");
+			else			print_info("Linear texture filtering has been disabled");
+		}
 	}
 	else
 	{
